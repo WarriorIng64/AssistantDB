@@ -1,6 +1,15 @@
 #!/usr/bin/python3
 
-import argparse, sys, webbrowser
+import argparse
+import subprocess
+import sys
+import webbrowser
+
+def speak(message, also_cmd=False):
+    '''Speak the given message using the text-to-speech backend.'''
+    if also_cmd:
+        print(message)
+    subprocess.call('espeak "' + message + '"', shell=True)
 
 parser = argparse.ArgumentParser()
 parser.add_argument('verb', type=str, help='Assistant database command.')
@@ -18,23 +27,23 @@ if args.verb in browse_cmd_list:
     # Open an indicated web page in the default browser
     site_name = args.verb_object.lower()
     if site_name in ['bannerweb', 'banner', 'registration', 'financial aid']:
-        print('Opening BannerWeb...')
+        speak('Opening BannerWeb...', args.verbose)
         webbrowser.open('https://www.ltu.edu/bannerweb')
     elif site_name in ['blackboard', 'bb']:
-        print('Opening BlackBoard...')
+        speak('Opening BlackBoard...', args.verbose)
         webbrowser.open('https://my.ltu.edu')
     elif site_name in ['ltu.edu', 'ltu website', 'ltu homepage']:
-        print('Opening the main LTU website...')
+        speak('Opening the main LTU website...', args.verbose)
         webbrowser.open('http://www.ltu.edu')
     elif site_name in ['email', 'webmail', 'mail', 'gmail']:
-        print('Opening Gmail...')
+        speak('Opening Gmail...', args.verbose)
         webbrowser.open('https://gmail.com')
     elif site_name in ['calendar', 'schedule', 'events']:
-        print('Opening Google Calendar...')
+        speak('Opening Google Calendar...', args.verbose)
         webbrowser.open('https://calendar.google.com')
     else:
-        print('Opening website: ' + args.verb_object)
+        speak('Opening website: ' + args.verb_object, args.verbose)
         webbrowser.open(args.verb_object)
 else:
-    print('Unrecognized verb; no action taken.')
+    speak('Sorry, I don\'t understand what you want.', args.verbose)
 exit()
