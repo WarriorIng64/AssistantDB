@@ -21,6 +21,7 @@ args = parser.parse_args()
 
 browse_cmd_list = ['open', 'go to', 'browse to', 'launch', 'take me to']
 email_cmd_list = ['email', 'compose', 'send']
+roomfinder_cmd_list = ['find', 'find room', 'where is room']
 
 if args.verbose:
     print(sys.version)
@@ -53,6 +54,38 @@ elif args.verb in email_cmd_list:
         recipient = 'https://mail.google.com/mail/u/0/#compose' # Gmail
     speak('Composing an email...', args.verbose)
     webbrowser.open(recipient)
+elif args.verb in roomfinder_cmd_list:
+    # Tell the user which building and floor a room is in
+    finder_message = ''
+    if args.verb_object:
+        if len(args.verb_object) >= 2:
+            room_letter = args.verb_object.upper()[0]
+            room_floor = args.verb_object.upper()[1]
+            building_dict = {'A': 'Architecture Building',
+                             'B': 'Business Services Building',
+                             'C': 'A. Alfred Taubman Student Services Center',
+                             'D': 'Art and Design Center',
+                             'F': 'CIMR Building',
+                             'E': 'Engineering Building',
+                             'R': 'Ridler Field House and Applied Research Center',
+                             'M': 'Wayne H. Buell Management Building',
+                             'S': 'Arts and Sciences Building',
+                             'T': 'University Technology and Learning Center'
+                            }
+            if room_letter in building_dict.keys():
+                building = building_dict[room_letter]
+            else:
+                building = ''
+
+            if building != '':
+                finder_message = 'Your room is in the ' + building + ' on floor ' + room_floor + '.'
+            else:
+                finder_message = 'Sorry, I don\'t know which building that is.'
+        else:
+            finder_message = 'Sorry, but I don\'t think that\'s a valid room number.'
+    else:
+        finder_message = 'Sorry, but I don\'t think you told me which room you want.'
+    speak(finder_message, args.verbose)
 else:
     speak('Sorry, I don\'t understand what you want.', args.verbose)
 exit()
