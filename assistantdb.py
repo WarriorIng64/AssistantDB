@@ -20,6 +20,7 @@ parser.add_argument('-v', '--verbose',
 args = parser.parse_args()
 
 browse_cmd_list = ['open', 'go to', 'browse to', 'launch', 'take me to']
+email_cmd_list = ['email', 'compose', 'send']
 
 if args.verbose:
     print(sys.version)
@@ -44,6 +45,14 @@ if args.verb in browse_cmd_list:
     else:
         speak('Opening website: ' + args.verb_object, args.verbose)
         webbrowser.open(args.verb_object)
+elif args.verb in email_cmd_list:
+    # Open a window to compose an email
+    if args.verb_object:
+        recipient = 'mailto:' + args.verb_object  # Open default email client
+    else:
+        recipient = 'https://mail.google.com/mail/u/0/#compose' # Gmail
+    speak('Composing an email...', args.verbose)
+    webbrowser.open(recipient)
 else:
     speak('Sorry, I don\'t understand what you want.', args.verbose)
 exit()
